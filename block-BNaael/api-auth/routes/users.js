@@ -28,8 +28,8 @@ if(!user){
   return res.status(400).json({err:"email is wrong"})
 }
 let result= await user.verifyPassword(password)
+return res.status(400).json({err:"logi process success fully"})
 
-console.log(user,result)
 
   } catch (error) {
     
