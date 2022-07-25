@@ -29,12 +29,8 @@ if(!user){
 }
 let result= await user.verifyPassword(password)
 return res.status(400).json({err:"logi process success fully"})
-
-
-  } catch (error) {
-    
+  } catch (error) { 
   }
 })
-
 
 module.exports = router;
