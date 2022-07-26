@@ -2,6 +2,9 @@ let mongoose=require("mongoose");
 let Schema=mongoose.Schema;
 
 let bcrypt=require("bcrypt")
+let jwt=require("jsonwebtoken")
+
+require('dotenv').config()
 
 let userSchema= new Schema({
     name:{type:String,required:true},
@@ -27,6 +30,26 @@ userSchema.methods.verifyPassword= async function(password){
     } catch (error) {
         return error
     }
+}
+
+userSchema.methods.verifytokan= async function(){
+    let payload= {email:this.email, userId:this.id};
+
+    try {
+        let token= await jwt.sign(payload,process.env.secret);
+        
+        return token  
+    } catch (error) {
+        return error
+    }
+}
+
+userSchema.methods.userJSON=  function(tokan){
+return {
+    name:this.name,
+    email:this.email,
+    tokan:tokan
+}
 
 }
 
