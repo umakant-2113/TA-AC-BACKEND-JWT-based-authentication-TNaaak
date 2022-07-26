@@ -9,12 +9,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/register",async(req,res,next)=>{
-  try{
+
 let user=await User.create(req.body)
-res.json(user)
-  }catch(err){
-return err;
-  }
+let tokan= await user.verifytokan()
+// console.log(user.userJSON(tokan))
+ res.status(200).json({user:user.userJSON(tokan)})
+
 })
 
 router.post("/login", async(req,res,next)=>{
@@ -28,8 +28,16 @@ if(!user){
   return res.status(400).json({err:"email is wrong"})
 }
 let result= await user.verifyPassword(password)
-return res.status(400).json({err:"logi process success fully"})
+if(!result){
+  return res.status(400).json({err:"password is wrong"})
+}
+
+let tokan= await user.verifytokan()
+
+return res.status(400).json({user:user.userJSON(tokan)})
+
   } catch (error) { 
+    next(error)
   }
 })
 

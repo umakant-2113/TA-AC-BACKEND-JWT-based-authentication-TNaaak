@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let mongoose=require("mongoose");
+require('dotenv').config()
 
 // connect mongoose
 mongoose.connect("mongodb://127.0.0.1/auth",(err)=>{
