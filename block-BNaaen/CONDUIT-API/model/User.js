@@ -10,7 +10,9 @@ let userSchema = new Schema({
   bio: { type: String },
   image: { type: String },
   password: { type: String },
-  following:{type:Boolean ,default:false},
+  follow:{type:Boolean ,default:false},
+  unfollow:{type:Boolean,default:false},
+  unfollowUser:[{type:Schema.Types.ObjectId, ref: "User"}],
   followUser:[{type:Schema.Types.ObjectId, ref: "User"}],
 });
 

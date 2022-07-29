@@ -10,6 +10,7 @@ let articleSchema= new Schema({
     body:{type:String},
     tagList:[{type:String}],
     favorited:{type:Boolean,default:false},
+    favoriteArticle:[{type:Schema.Types.ObjectId,ref: "User"}],
     favoritiesCount:{type:Number,default:20},
     author:{
         userName:{type:String,required:true},

@@ -1,8 +1,14 @@
 let express = require('express');
 let router = express.Router();
 
+// all models 
 const Article = require('../model/Article');
 let Comment=require("../model/Comment")
+let User= require("../model/User");
+
+// authantication part 
+let auth= require("../middleware/auth");
+router.use(auth.verifyToken)
 
 // create article
 router.post('/', async (req, res, next) => {
@@ -25,8 +31,8 @@ router.get('/', async (req, res, next) => {
   let articles = await Article.find(query);
   res.json(articles);
 });
-// Favorited by user:
 
+// Favorited by user:
 router.get('/', async (req, res, next) => {
   let query = req.query;
   let articles = await Article.find(query);
@@ -86,8 +92,36 @@ router.get("/:slug/comments", async(req,res,next)=>{
     res.json(commentOfArticle)
 })
 
-// tags lists
+// favorite arrticles
 
+router.post("/:slug/favorite", async(req,res,next)=>{
+  let slug= req.params.slug;
+  let loginuser= req.users.userId;
+let article=  await Article.findOne({slug});
+let updateArticle= await Article.findByIdAndUpdate(article.id,{$push: {favoriteArticle: loginuser}},{new :true});
+if(updateArticle.favoriteArticle.includes(loginuser)){
+  let user= await User.findById(loginuser);
+  res.json({favoriteArticle: true,user:user})
+}else{
+  res.json({unfavorite:true})
+}
+})
+
+// unfavorite articles
+router.delete("/:slug/unfavorite", async (req,res,next)=>{
+let slug= req.params.slug;
+let loginuserId= req.users.userId;
+let article= await Article.findOne({slug});
+if( article.favoriteArticle.includes(loginuserId)){
+  let user= await User.findById(loginuserId)
+res.json({unfavorite :true, user:user})
+}
+else{
+  res.json({favorite: "this article in favorite"})
+}
+})
+
+// tags lists
 router.get("/taglist", async(req,res,next)=>{
 let tags = await Article.find({}).distinct("tagList");
 res.json(tags)
