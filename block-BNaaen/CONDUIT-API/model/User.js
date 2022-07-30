@@ -11,8 +11,6 @@ let userSchema = new Schema({
   image: { type: String },
   password: { type: String },
   follow:{type:Boolean ,default:false},
-  unfollow:{type:Boolean,default:false},
-  unfollowUser:[{type:Schema.Types.ObjectId, ref: "User"}],
   followUser:[{type:Schema.Types.ObjectId, ref: "User"}],
 });
 

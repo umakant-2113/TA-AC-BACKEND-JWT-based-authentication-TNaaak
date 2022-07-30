@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-// let auth= require("../middleware/auth");
-// router.use(auth.verifyToken)
+
 let User= require("../model/User");
 
 
@@ -37,6 +36,8 @@ res.status(200).json({user  :  userData})
 })
 
 // current user
+let auth= require("../middleware/auth");
+router.use(auth.verifyToken)
 
 router.get("/",  async(req,res,next)=>{
   let userId = req.users.userId;
