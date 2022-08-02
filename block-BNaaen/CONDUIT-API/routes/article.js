@@ -77,6 +77,9 @@ router.delete("/:slug", async(req,res,next)=>{
 // add comment in articles
 router.post("/:slug/comment",  async(req,res,next)=>{
 let slug= req.params.slug;
+
+// create comment 
+
 let comment= await Comment.create(req.body);
 let articles= await Article.find({slug});
 let article= await Article.findByIdAndUpdate(articles[0].id,{$push: {commentId: comment.id}},{new:true});
@@ -88,6 +91,9 @@ res.json(article)
 router.get("/:slug/comments", async(req,res,next)=>{
     let slug= req.params.slug;
     let articles= await Article.find({slug});
+
+    // find comment a particular questions 
+
     let commentOfArticle= await Article.findById(articles[0].id).populate("commentId");
     res.json(commentOfArticle)
 })
@@ -96,9 +102,18 @@ router.get("/:slug/comments", async(req,res,next)=>{
 
 router.post("/:slug/favorite", async(req,res,next)=>{
   let slug= req.params.slug;
+
+  // curremt login user
+
   let loginuser= req.users.userId;
+
 let article=  await Article.findOne({slug});
+
+// update article
 let updateArticle= await Article.findByIdAndUpdate(article.id,{$push: {favoriteArticle: loginuser}},{new :true});
+
+// checking favorite article of login user
+
 if(updateArticle.favoriteArticle.includes(loginuser)){
   let user= await User.findById(loginuser);
   res.json({favoriteArticle: true,user:user})
@@ -110,8 +125,13 @@ if(updateArticle.favoriteArticle.includes(loginuser)){
 // unfavorite articles
 router.delete("/:slug/unfavorite", async (req,res,next)=>{
 let slug= req.params.slug;
+
+// login user
 let loginuserId= req.users.userId;
 let article= await Article.findOne({slug});
+
+// checking articls is unfavorites
+
 if( article.favoriteArticle.includes(loginuserId)){
   let user= await User.findById(loginuserId)
 res.json({unfavorite :true, user:user})
