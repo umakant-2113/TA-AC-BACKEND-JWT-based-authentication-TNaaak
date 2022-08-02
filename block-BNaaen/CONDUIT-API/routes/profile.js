@@ -1,5 +1,7 @@
 let express = require('express');
 const User = require('../model/User');
+
+
 let router = express.Router();
 let auth= require("../middleware/auth");
 
@@ -21,10 +23,16 @@ return res.json({ profile })
 
 router.post('/:username/follow', async (req, res, next) => {
   let loginUserId =req.users.userId;
-  console.log(req.users)
+
+//   find current login user
+
+
   let username = req.params.username
   let user = await User.findOne({ userName:username });
    let loginUser= await User.findById(loginUserId)
+
+//    check user is follow ofr not 
+
    if(loginUser.followUser.includes(user[0].id)){
     res.json({follow: "this user is already follow"})
    }
